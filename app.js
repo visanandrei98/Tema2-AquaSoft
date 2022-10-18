@@ -9,7 +9,8 @@ const mysqlConnection = mysql.createConnection({
     host: 'localhost',
     database: 'bazaDeDate',
     user: 'root',
-    password: 'password'
+    password: 'password',
+    multipleStatements : true
 }); // informatii luate din mySQL workbench cand am creeat database-ul
 
 
@@ -42,9 +43,9 @@ app.get('/articles/:article_weight', (req, res) =>{
 });
 
 
-//////////Delete pentru a sterge un element din tabel in functie de "Location"
+//////////Delete pentru a sterge un element din tabel in functie de "Location". Pentru a vedea schimbarile voi folosi un API "Postman"
 app.delete('/articles/:Location', (req, res) =>{
-    let sql = 'Delete FROM Articles WHERE Location = ?'; 
+    var sql = 'Delete FROM Articles WHERE Location = ?'; 
     mysqlConnection.query(sql, [req.params.Location] , (err,results) =>{
         if (err) throw err;
         res.send("Deleted location");
@@ -52,8 +53,73 @@ app.delete('/articles/:Location', (req, res) =>{
 });
 
 
-/////////////POST
+/////////////PUT
+app.put('/articles', (req, res) =>{
+    let art = req.body;
+    var sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+    CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
+     
+    mysqlConnection.query(sql, [art.ID, art.Article_no, art.Article_short_description, art.Article_date, art.Collection_date, art.article_body, art.Article_source, art.Article_url, art.Location, art.Article_keywords, art.Article_weight, art.Article_citations] , (err,results) =>{
+        if (err) throw err;
+        res.send('Updated succesfully');
+    })
+});
+
+//Articolul se va updatata daca folosesc un articol cu un ID deja existent
+// de exemplu: 
+
+// {
+//     "ID": 2,
+//     "Article_no": "10",
+//     "Article_short_description": "Youtube JOB",
+//     "Article_date": "2022-05-05",
+//     "Collection_date": "2022-02-01",
+//     "Article_body": "Angajam la youtube ",
+//     "Article_source": "youtube",
+//     "Article_URL": "youtube.com",
+//     "Location": "England",
+//     "Article_keywords": "job Youtube England",
+//     "Article_weight": 550,
+//     "Article_citations": "youtube.com"
+// }
+
+// Articolul cu ID 2 va fi updatat cu urmatoarele informatii
 
 
 
-////////PUT
+
+////////POST
+
+app.post('/articles', (req, res) =>{
+    let art = req.body;
+    var sql = 'SET @artID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+    CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
+     
+    mysqlConnection.query(sql, [art.ID, art.Article_no, art.Article_short_description, art.Article_date, art.Collection_date, art.article_body, art.Article_source, art.Article_url, art.Location, art.Article_keywords, art.Article_weight, art.Article_citations] , (err,results) =>{
+        if (err) throw err;
+        res.send('Updated succesfully');
+    })
+});
+
+
+// am incercat sa adaug un nou articol folosind "postman" -> "POST" 
+// {
+//     "ID": 0,
+//     "Article_no": "10",
+//     "Article_short_description": "Youtube JOB",
+//     "Article_date": "2022-05-05",
+//     "Collection_date": "2022-02-01",
+//     "Article_body": "Angajam la youtube ",
+//     "Article_source": "youtube",
+//     "Article_URL": "youtube.com",
+//     "Location": "England",
+//     "Article_keywords": "job Youtube England",
+//     "Article_weight": 550,
+//     "Article_citations": "youtube.com"
+// }
+// Conform procedurii creeate in mysql workbench "AddOrEditArticle"
+// daca ID ul nou este = 0 introduce toate valorile articolului, altfel
+// actualizeaza articolul cu noile valorile introduse
+
+
+/// postman JSON link -> https://www.getpostman.com/collections/29f9630b9ef0278203f0

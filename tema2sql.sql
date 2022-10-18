@@ -19,8 +19,8 @@ update Articles set Collection_date = str_to_date(Collection_date, "%d/%m/%Y");
 #un numar de 500 caractere pentru a accepta toate liniile excelului
 #Excelul l-am salvat .csv si am dat "table data import wizard"
 
-#drop database bazaDeDate; (pentru a sterge database-ul)
-
+#drop database bazaDeDate; #(pentru a sterge database-ul)
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 
 
 
