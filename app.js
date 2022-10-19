@@ -1,8 +1,13 @@
 const mysql = require('mysql'); // require() folosit de node.js pentru a citi module
 const express = require('express');
+const bodyParser = require('body-parser');
 var app = express();
 
-
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: false
+}))
+    
 
 
 const mysqlConnection = mysql.createConnection({
@@ -56,10 +61,24 @@ app.delete('/articles/:Location', (req, res) =>{
 /////////////PUT
 app.put('/articles', (req, res) =>{
     let art = req.body;
-    var sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+    let post = {
+        ID : art.ID, 
+        Article_no : art.Article_no, 
+        Article_short_description: art.Article_short_description, 
+        Article_date: art.Article_date, 
+        Collection_date: art.Collection_date, 
+        Article_body: art.Article_body, 
+        Article_source: art.Article_source, 
+        Article_url: art.Article_url, 
+        Location: art.Location, 
+        Article_keywords: art.Article_keywords, 
+        Article_weight: art.Article_weight, 
+        Article_citations: art.Article_citations
+    }
+    let sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
     CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
      
-    mysqlConnection.query(sql, [art.ID, art.Article_no, art.Article_short_description, art.Article_date, art.Collection_date, art.article_body, art.Article_source, art.Article_url, art.Location, art.Article_keywords, art.Article_weight, art.Article_citations] , (err,results) =>{
+    mysqlConnection.query(sql, post , (err,results) =>{
         if (err) throw err;
         res.send('Updated succesfully');
     })
@@ -92,12 +111,26 @@ app.put('/articles', (req, res) =>{
 
 app.post('/articles', (req, res) =>{
     let art = req.body;
-    var sql = 'SET @artID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+    let post = {
+        ID : art.ID, 
+        Article_no : art.Article_no, 
+        Article_short_description: art.Article_short_description, 
+        Article_date: art.Article_date, 
+        Collection_date: art.Collection_date, 
+        Article_body: art.Article_body, 
+        Article_source: art.Article_source, 
+        Article_url: art.Article_url, 
+        Location: art.Location, 
+        Article_keywords: art.Article_keywords, 
+        Article_weight: art.Article_weight, 
+        Article_citations: art.Article_citations
+    };
+    var sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
     CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
      
-    mysqlConnection.query(sql, [art.ID, art.Article_no, art.Article_short_description, art.Article_date, art.Collection_date, art.article_body, art.Article_source, art.Article_url, art.Location, art.Article_keywords, art.Article_weight, art.Article_citations] , (err,results) =>{
+    mysqlConnection.query(sql, post , (err,results) =>{
         if (err) throw err;
-        res.send('Updated succesfully');
+        res.send(results);
     })
 });
 
