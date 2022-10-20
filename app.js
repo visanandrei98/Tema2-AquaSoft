@@ -1,9 +1,11 @@
 const mysql = require('mysql'); // require() folosit de node.js pentru a citi module
 const express = require('express');
-const bodyParser = require('body-parser');
 var app = express();
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
 app.use(express.json());
+
 app.use(express.urlencoded({
     extended: false
 }))
@@ -60,27 +62,30 @@ app.delete('/articles/:Location', (req, res) =>{
 
 /////////////PUT
 app.put('/articles', (req, res) =>{
+    
     let art = req.body;
-    let post = {
-        ID : art.ID, 
-        Article_no : art.Article_no, 
-        Article_short_description: art.Article_short_description, 
-        Article_date: art.Article_date, 
-        Collection_date: art.Collection_date, 
-        Article_body: art.Article_body, 
-        Article_source: art.Article_source, 
-        Article_url: art.Article_url, 
-        Location: art.Location, 
-        Article_keywords: art.Article_keywords, 
-        Article_weight: art.Article_weight, 
-        Article_citations: art.Article_citations
-    }
-    let sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
-    CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
+    let ID = art.ID; 
+    let Article_no = art.Article_no; 
+    let Article_short_description = art.Article_short_description; 
+    let Article_date = art.Article_date; 
+    let Collection_date = art.Collection_date;
+    let Article_body =  art.Article_body; 
+    let Article_source = art.Article_source; 
+    let Article_URL =  art.Article_URL; 
+    let Location = art.Location; 
+    let Article_keywords = art.Article_keywords; 
+    let Article_weight =  art.Article_weight; 
+    let Article_citations =  art.Article_citations;
+    let sqlQuerry = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_URL = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+    CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_URL, @Location, @Article_keywords, @Article_weight, @Article_citations);';
      
-    mysqlConnection.query(sql, post , (err,results) =>{
-        if (err) throw err;
-        res.send('Updated succesfully');
+    mysqlConnection.query(sqlQuerry, [ID, Article_no, Article_short_description, Article_date, Collection_date, Article_body, Article_source, Article_URL, Location,Article_keywords,Article_weight, Article_citations] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("Updated")
+        }
     })
 });
 
@@ -111,28 +116,31 @@ app.put('/articles', (req, res) =>{
 
 app.post('/articles', (req, res) =>{
     let art = req.body;
-    let post = {
-        ID : art.ID, 
-        Article_no : art.Article_no, 
-        Article_short_description: art.Article_short_description, 
-        Article_date: art.Article_date, 
-        Collection_date: art.Collection_date, 
-        Article_body: art.Article_body, 
-        Article_source: art.Article_source, 
-        Article_url: art.Article_url, 
-        Location: art.Location, 
-        Article_keywords: art.Article_keywords, 
-        Article_weight: art.Article_weight, 
-        Article_citations: art.Article_citations
-    };
-    var sql = 'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
-    CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
+    let ID = art.ID; 
+    let Article_no = art.Article_no; 
+    let Article_short_description = art.Article_short_description; 
+    let Article_date = art.Article_date; 
+    let Collection_date = art.Collection_date;
+    let Article_body =  art.Article_body; 
+    let Article_source = art.Article_source; 
+    let Article_URL =  art.Article_URL; 
+    let Location = art.Location; 
+    let Article_keywords = art.Article_keywords; 
+    let Article_weight =  art.Article_weight; 
+    let Article_citations =  art.Article_citations;
+    
+    let sqlQuerry = 'insert into articles values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
      
-    mysqlConnection.query(sql, post , (err,results) =>{
-        if (err) throw err;
-        res.send(results);
-    })
-});
+    mysqlConnection.query(sqlQuerry, [ID, Article_no, Article_short_description, Article_date, Collection_date, Article_body, Article_source,Article_URL,Location,Article_keywords,Article_weight, Article_citations] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("POSTED")
+        }
+    });
+})
+
 
 
 // am incercat sa adaug un nou articol folosind "postman" -> "POST" 
@@ -156,3 +164,6 @@ app.post('/articles', (req, res) =>{
 
 
 /// postman JSON link -> https://www.getpostman.com/collections/29f9630b9ef0278203f0
+
+//'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
+//CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
