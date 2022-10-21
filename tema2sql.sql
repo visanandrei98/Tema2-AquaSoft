@@ -12,16 +12,41 @@ create table Articles(ID int,
                     Article_keywords varchar(800),
                     Article_weight int,
                     Article_citations varchar(800));
-                    
+create table categorii(ID int, Cateogry_name varchar(800));
+create table Tokens(ID int, Token_body varchar(800));                      
 select * from Articles;
 update Articles set Article_date = str_to_date(Article_date, "%d/%m/%Y");
 update Articles set Collection_date = str_to_date(Collection_date, "%d/%m/%Y");
 #am creeat capetele de tabel si am setat 
-#un numar de 500 caractere pentru a accepta toate liniile excelului
+#un numar de 800 caractere pentru a accepta toate liniile excelului
 #Excelul l-am salvat .csv si am dat "table data import wizard"
 
-drop database bazaDeDate; #(pentru a sterge database-ul)
+#drop database bazaDeDate; #(pentru a sterge database-ul)
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+
+alter table articles add column Article_reference varchar(800);
+
+update articles set Article_reference = "Plan de afacere" where ID = 1;
+update articles set Article_reference = "Presa" where ID = 2;
+update articles set Article_reference = "Programare job" where ID = 3;
+update articles set Article_reference = "Analiza Piata" where ID = 4;
+update articles set Article_reference = "Legi si mersul banilor " where ID = 5;
+update articles set Article_reference = "Legi in engleza" where ID = 6;
+
+update Tokens set Token_body = "Tok1" where ID = 5;
+update Tokens set Token_body = "Tok2" where ID = 6;
+update Tokens set Token_body = "Tok3" where ID = 7;
+update Tokens set Token_body = "Tok4" where ID = 8;
+
+describe articles;
+describe categorii;
+
+alter table articles modify ID int Primary key;
+alter table tokens modify Token_body char(4);
+alter table articles drop primary key;
+alter table categorii drop primary key;
+
+alter table tokens add constraint foreign key (ID) references articles(ID);
 
 
 

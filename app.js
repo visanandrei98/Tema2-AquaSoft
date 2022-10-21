@@ -9,7 +9,13 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 }))
-    
+
+
+// const getRoute = require('./routes/articlesGet');
+// const deleteRoute = require('./routes/articlesDelete');
+// const postRoute = require('./routes/articlesPost');
+// const putRoute = require('./routes/articlesPut');
+
 
 
 const mysqlConnection = mysql.createConnection({
@@ -30,6 +36,7 @@ app.listen(3000, () =>{
             console.log( 'Connection succeded'); // daca nu da eroare afiseaza textul
     });
 })
+
 // Cand dai request ('req') la localhost:3000/articles raspunsul('response')
 // sa fie  variabila "sql" (tot tabelul creeat in mysql Workbench), in caz ca da eroare
 // sa se opreasca functia, in caz ca nu da eroare sa se afiseze rezultatele sub forma unui array cu obiecte("res.send()")
@@ -167,3 +174,115 @@ app.post('/articles', (req, res) =>{
 
 //'SET @ID = ?; SET @Article_no = ?; SET @Article_short_description = ?; SET @Article_date = ?; SET @Collection_date = ?; SET @Article_body = ?; SET @Article_source = ?; SET @Article_url = ?; SET @Location = ?; SET @Article_keywords = ?; SET @Article_weight = ?; SET @Article_citations = ?; \
 //CALL AddOrEditArticle(@ID, @Article_no, @Article_short_description, @Article_date, @Collection_date, @Article_body, @Article_source, @Article_url, @Location, @Article_keywords, @Article_weight, @Article_citations);';
+
+
+////////////////////////////////////////////TEMA 3
+
+
+
+//////////////////TABLE Categorii
+
+app.get('/categorii', (req, res) =>{
+    let sql = 'SELECT  * from categorii'; 
+    mysqlConnection.query(sql, (err,results) =>{
+        if (err) throw err;
+        res.send(results);
+    })
+});
+
+app.delete('/categorii/:ID', (req, res) =>{
+    var sql = 'Delete FROM categorii WHERE ID = ?'; 
+    mysqlConnection.query(sql, [req.params.ID] , (err,results) =>{
+        if (err) throw err;
+        res.send("Deleted ID");
+    })
+});
+
+app.put('/categorii', (req, res) =>{
+    let art = req.body;
+
+    let ID = art.ID; 
+    let Category_name = art.Category_name;
+    let sqlQuerry = 'SET @ID = ?; SET @Category_name = ?; CALL AddOrEditCategory(@ID, @Category_name);';
+     
+    mysqlConnection.query(sqlQuerry, [ID, Category_name] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("Updated")
+        }
+    })
+});
+
+app.post('/categorii', (req, res) =>{
+    let art = req.body;
+
+    let ID = art.ID; 
+    let Category_name = art.Category_name;
+    
+    let sqlQuerry = 'insert into categorii values(?, ?)';
+     
+    mysqlConnection.query(sqlQuerry, [ID, Category_name] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("POSTED")
+        }
+    });
+})
+
+///////////////////TABLE Tokens
+
+app.get('/tokens', (req, res) =>{
+    let sql = 'SELECT  * from tokens'; 
+    mysqlConnection.query(sql, (err,results) =>{
+        if (err) throw err;
+        res.send(results);
+    })
+});
+
+app.delete('/tokens/:ID', (req, res) =>{
+    var sql = 'Delete FROM tokens WHERE ID = ?'; 
+    mysqlConnection.query(sql, [req.params.ID] , (err,results) =>{
+        if (err) throw err;
+        res.send("Deleted ID");
+    })
+});
+
+app.put('/tokens', (req, res) =>{
+    let art = req.body;
+
+    let ID = art.ID; 
+    let Token_body = art.Token_body;
+    let sqlQuerry = 'SET @ID = ?; SET @Token_body = ?; CALL AddOrEditTokens(@ID, @Token_body);';
+     
+    mysqlConnection.query(sqlQuerry, [ID, Token_body] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("Updated")
+        }
+    })
+});
+
+app.post('/tokens', (req, res) =>{
+    let art = req.body;
+
+    let ID = art.ID; 
+    let Token_body = art.Token_body;
+    
+    let sqlQuerry = 'insert into tokens values(?, ?)';
+     
+    mysqlConnection.query(sqlQuerry, [ID, Token_body] , (err,results,field) =>{
+        if (err) 
+        {
+            console.log(err)
+        }else {
+            res.send("POSTED")
+        }
+    });
+})
+

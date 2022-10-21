@@ -1,16 +1,16 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AddOrEditArticle`(
 IN _ID int,
-IN _Article_no varchar(500),
-IN _Article_short_description varchar(500),
+IN _Article_no varchar(800),
+IN _Article_short_description varchar(800),
 IN _Article_date CHAR(10),
 IN _Collection_date CHAR(10),
-IN _Article_body varchar(500),
-IN _Article_source varchar(500),
-IN _Article_URL varchar(500),
-IN _Location varchar(500),
-IN _Article_keywords varchar(500),
+IN _Article_body varchar(800),
+IN _Article_source varchar(800),
+IN _Article_URL varchar(800),
+IN _Location varchar(800),
+IN _Article_keywords varchar(800),
 IN _Article_weight int,
-IN _Article_citations varchar(500)
+IN _Article_citations varchar(800)
 )
 BEGIN
 	IF _ID = 0 THEN
