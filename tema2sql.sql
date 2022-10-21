@@ -24,28 +24,37 @@ update Articles set Collection_date = str_to_date(Collection_date, "%d/%m/%Y");
 #drop database bazaDeDate; #(pentru a sterge database-ul)
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 
-alter table articles add column Article_reference varchar(800);
+alter table articles add column Article_money_made_euro int;
+alter table articles add column Article_visitors int;
 
-update articles set Article_reference = "Plan de afacere" where ID = 1;
-update articles set Article_reference = "Presa" where ID = 2;
-update articles set Article_reference = "Programare job" where ID = 3;
-update articles set Article_reference = "Analiza Piata" where ID = 4;
-update articles set Article_reference = "Legi si mersul banilor " where ID = 5;
-update articles set Article_reference = "Legi in engleza" where ID = 6;
+update articles set Article_money_made_euro = "2000" where ID = 1;
+update articles set Article_money_made_euro = "150" where ID = 2;
+update articles set Article_money_made_euro = "180" where ID = 3;
+update articles set Article_money_made_euro = "2500" where ID = 4;
+update articles set Article_money_made_euro = "1670" where ID = 5;
+update articles set Article_money_made_euro = "300" where ID = 6;
 
-update Tokens set Token_body = "Tok1" where ID = 5;
-update Tokens set Token_body = "Tok2" where ID = 6;
-update Tokens set Token_body = "Tok3" where ID = 7;
-update Tokens set Token_body = "Tok4" where ID = 8;
+
+update articles set Article_visitors = "10000" where ID = 1;
+update articles set Article_visitors = "16000" where ID = 2;
+update articles set Article_visitors = "1000" where ID = 3;
+update articles set Article_visitors = "25080" where ID = 4;
+update articles set Article_visitors = "12344" where ID = 5;
+update articles set Article_visitors = "300" where ID = 6;
+#update Tokens set Token_body = "Tok1" where ID = 5;
+#update Tokens set Token_body = "Tok2" where ID = 6;
+#update Tokens set Token_body = "Tok3" where ID = 7;
+#update Tokens set Token_body = "Tok4" where ID = 8;
 
 describe articles;
 describe categorii;
+describe tokens;
 
 alter table articles modify ID int Primary key;
 alter table tokens modify Token_body char(4);
 alter table articles drop primary key;
 alter table categorii drop primary key;
-
+ALTER TABLE categorii DROP FOREIGN KEY ID;
 alter table tokens add constraint foreign key (ID) references articles(ID);
 
 
