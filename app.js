@@ -274,7 +274,7 @@ app.post('/tokens', (req, res) =>{
     let ID = art.ID; 
     let Token_body = art.Token_body;
     
-    let sqlQuerry = 'insert into tokens values(?, ?)';
+    let sqlQuerry = ' insert into tokens values(?, ?)';
      
     mysqlConnection.query(sqlQuerry, [ID, Token_body] , (err,results,field) =>{
         if (err) 
